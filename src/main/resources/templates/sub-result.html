@@ -1,0 +1,17 @@
+<!DOCTYPE HTML>
+<html xmlns:th="https://www.thymeleaf.org">
+<head>
+    <title>Subtraction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+<p>Выполнил Яцко Егор Юрьевич, студент 4 курса 4 группы ФПМИ. 2023 год</p>
+<form action="#" th:action="@{/index}" th:object="${calculator}" method="post">
+    <p>First number: <input type="text" th:field="*{a}" /></p>
+    <p>Second number: <input type="text" th:field="*{b}" /></p>
+    <p th:text = "'Subtraction = ' + ${calculator.sub().toPlainString()}" />
+    <p><input type="submit" value="+" th:formaction="@{/index/sum}" />
+        <input type="submit" value="-" th:formaction="@{/index/sub}" /></p>
+</form>
+</body>
+</html>
