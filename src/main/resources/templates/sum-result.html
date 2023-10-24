@@ -9,9 +9,13 @@
 <form action="#" th:action="@{/index}" th:object="${calculator}" method="post">
     <p>First number: <input type="text" th:field="*{a}" /></p>
     <p>Second number: <input type="text" th:field="*{b}" /></p>
-    <p th:text = "'Sum = ' + ${calculator.sum().toPlainString()}" />
-    <p><input type="submit" value="+" th:formaction="@{/index/sum}" />
-        <input type="submit" value="-" th:formaction="@{/index/sub}" /></p>
+    <p th:text = "'Sum = ' + ${result}" />
+    <p>
+        <input type="submit" value="+" th:formaction="@{/index/sum}" />
+        <input type="submit" value="-" th:formaction="@{/index/sub}" />
+        <input type="submit" value="*" th:formaction="@{/index/mul}" />
+        <input type="submit" value="/" th:formaction="@{/index/divide}" />
+    </p>
 </form>
 </body>
 </html>

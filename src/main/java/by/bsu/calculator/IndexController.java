@@ -16,13 +16,25 @@ public class IndexController {
 
     @PostMapping("/index/sum")
     public String sum(@ModelAttribute("calculator") CalculatorModel calculator, Model model) throws Exception {
-        model.addAttribute("result", calculator.sum().toString());
+        model.addAttribute("result", calculator.sum());
         return "sum-result";
     }
 
     @PostMapping("/index/sub")
     public String sub(@ModelAttribute("calculator") CalculatorModel calculator, Model model) throws Exception {
-        model.addAttribute("result", calculator.sub().toString());
+        model.addAttribute("result", calculator.sub());
         return "sub-result";
+    }
+
+    @PostMapping("/index/mul")
+    public String mul(@ModelAttribute("calculator") CalculatorModel calculator, Model model) throws Exception {
+        model.addAttribute("result", calculator.mul());
+        return "mul-result";
+    }
+
+    @PostMapping("/index/divide")
+    public String divide(@ModelAttribute("calculator") CalculatorModel calculator, Model model) throws Exception {
+        model.addAttribute("result", calculator.divide());
+        return "div-result";
     }
 }
