@@ -14,9 +14,15 @@ public class IndexController {
         return "index";
     }
 
-    @PostMapping("/index/sum")
+    @PostMapping("/index")
+    public String postIndexForm(@ModelAttribute("calculator") CalculatorModel calculator, Model model) {
+        model.addAttribute("calculator", calculator);
+        return "index";
+    }
+
+    /*@PostMapping("/index/sum")
     public String sum(@ModelAttribute("calculator") CalculatorModel calculator, Model model) throws Exception {
-        model.addAttribute("result", calculator.sum());
+        model.addAttribute("calculator", calculator.sum());
         return "sum-result";
     }
 
@@ -36,5 +42,5 @@ public class IndexController {
     public String divide(@ModelAttribute("calculator") CalculatorModel calculator, Model model) throws Exception {
         model.addAttribute("result", calculator.divide());
         return "div-result";
-    }
+    }*/
 }

@@ -7,14 +7,44 @@
 <body>
 <p>Выполнил Яцко Егор Юрьевич, студент 4 курса 4 группы ФПМИ. 2023 год</p>
 <form action="#" th:action="@{/index}" th:object="${calculator}" method="post">
-    <p>First number: <input type="text" th:field="*{a}" /></p>
-    <p>Second number: <input type="text" th:field="*{b}" /></p>
+    <p><input type="text" th:field="*{a}" />
+    <select name="operator1">
+        <option th:each="operation : ${calculator.operations}"
+                th:selected="${calculator.getOperator1()} == ${operation} ? true : false"
+                th:text="${operation}"/>
+    </select>
+     (
+    <input type="text" th:field="*{b}" />
+    <select name="operator2">
+        <option th:each="operation : ${calculator.operations}"
+                th:selected="${calculator.getOperator2()} == ${operation} ? true : false"
+                th:text="${operation}"/>
+    </select>
+    <input type="text" th:field="*{c}" />
+     )
+    <select name="operator3">
+        <option th:each="operation : ${calculator.operations}"
+                th:selected="${calculator.getOperator3()} == ${operation} ? true : false"
+                th:text="${operation}"/>
+    </select>
+    <input type="text" th:field="*{d}" /></p>
     <p>
-        <input type="submit" value="+" th:formaction="@{/index/sum}" />
-        <input type="submit" value="-" th:formaction="@{/index/sub}" />
-        <input type="submit" value="*" th:formaction="@{/index/mul}" />
-        <input type="submit" value="/" th:formaction="@{/index/divide}" />
+        <select name="strSelectedRounding">
+            <option th:selected="${calculator.getStrSelectedRounding()} == ${calculator.getStrMathsRounding()} ? true : false"
+                    th:text="${calculator.getStrMathsRounding()}">
+                Математическое
+            </option>
+            <option th:selected="${calculator.getStrSelectedRounding()} == ${calculator.getStrBankRounding()} ? true : false"
+                    th:text="${calculator.getStrBankRounding()}">>
+            </option>
+            <option th:selected="${calculator.getStrSelectedRounding()} == ${calculator.getStrTruncRounding()} ? true : false"
+                    th:text="${calculator.getStrTruncRounding()}">>
+            </option>
+        </select>
     </p>
+    <p><input type="submit" value="Calculate!" th:formaction="@{/index}"/></p>
 </form>
+<p>Precise: <span th:text="${calculator.getResult(calculator.getStrSelectedRounding())}"/></p>
+<p>Rounded: <span th:text="${calculator.getRoundedResult()}"/></p>
 </body>
 </html>
