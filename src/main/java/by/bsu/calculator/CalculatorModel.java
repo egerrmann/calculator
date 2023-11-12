@@ -54,8 +54,19 @@ public class CalculatorModel {
 
         try {
             midVal = calculate(b, c, operator2, RoundingMode.HALF_UP);
-            firstVal = calculate(a, midVal, operator1, RoundingMode.HALF_UP);
-            result = calculate(firstVal, d, operator3, RoundingMode.HALF_UP);
+            if (operator1.equals("*") || operator1.equals("/")) {
+                firstVal = calculate(a, midVal, operator1, RoundingMode.HALF_UP);
+                result = calculate(firstVal, d, operator3, RoundingMode.HALF_UP);
+            } else {
+                if (operator3.equals("*") || operator3.equals("/")) {
+                    firstVal = calculate(midVal, d, operator3, RoundingMode.HALF_UP);
+                    result = calculate(a, firstVal, operator1, RoundingMode.HALF_UP);
+                } else {
+                    firstVal = calculate(a, midVal, operator1, RoundingMode.HALF_UP);
+                    result = calculate(firstVal, d, operator3, RoundingMode.HALF_UP);
+                }
+            }
+
         } catch (Exception e) {
             return "";
         }
