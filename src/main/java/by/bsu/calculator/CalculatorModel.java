@@ -40,10 +40,25 @@ public class CalculatorModel {
     RoundingMode selectedRounding = RoundingMode.HALF_UP;
     String strSelectedRounding = "Математическое";
 
-    public String getResult(String roundingMode) throws Exception {
-        String midVal = calculate(b, c, operator2, RoundingMode.HALF_UP);
-        String firstVal = calculate(a, midVal, operator1, RoundingMode.HALF_UP);
-        String result = calculate(firstVal, d, operator3, RoundingMode.HALF_UP);
+    public String getResult(String roundingMode) {
+        try {
+            validateNumbers();
+            formatNumbers();
+        } catch (IllegalNumberFormatException e) {
+            return e.getMessage();
+        }
+
+        String midVal;
+        String firstVal;
+        String result;
+
+        try {
+            midVal = calculate(b, c, operator2, RoundingMode.HALF_UP);
+            firstVal = calculate(a, midVal, operator1, RoundingMode.HALF_UP);
+            result = calculate(firstVal, d, operator3, RoundingMode.HALF_UP);
+        } catch (Exception e) {
+            return "";
+        }
 
         strSelectedRounding = roundingMode;
         if (strSelectedRounding.equals("Математическое"))
@@ -52,7 +67,9 @@ public class CalculatorModel {
             selectedRounding = RoundingMode.HALF_EVEN;
         if (strSelectedRounding.equals("Усечение"))
             selectedRounding = RoundingMode.DOWN;
-        roundedResult = new BigDecimal(result).setScale(0, selectedRounding).toString();
+        roundedResult = new BigDecimal(result).setScale(0, selectedRounding).toPlainString();
+
+        result = formatNumber(new BigDecimal(result), RoundingMode.HALF_UP);
 
         return result;
     }
@@ -63,52 +80,32 @@ public class CalculatorModel {
             case "-" -> sub(a, b, roundingMode);
             case "*" -> mul(a, b, roundingMode);
             case "/" -> divide(a, b, roundingMode);
-            default -> throw new IllegalStateException("Unexpected value: " + operator);
+            default -> throw new Exception("Unexpected value: " + operator);
         };
     }
 
-    public String sum(String a, String b, RoundingMode roundingMode) throws Exception {
-        try {
-            validateNumbers();
-            formatNumbers();
-            return formatNumber(new BigDecimal(a).add(new BigDecimal(b)), roundingMode);
-        } catch (IllegalNumberFormatException e) {
-            return e.getLocalizedMessage();
-        }
+    public String sum(String a, String b, RoundingMode roundingMode) {
+        return new BigDecimal(a).add(new BigDecimal(b))
+                .setScale(10, roundingMode).toPlainString();
     }
 
-    public String sub(String a, String b, RoundingMode roundingMode) throws Exception {
-        try {
-            validateNumbers();
-            formatNumbers();
-            return formatNumber(new BigDecimal(a).subtract(new BigDecimal(b)), roundingMode);
-        } catch (IllegalNumberFormatException e) {
-            return e.getLocalizedMessage();
-        }
+    public String sub(String a, String b, RoundingMode roundingMode) {
+        return new BigDecimal(a).subtract(new BigDecimal(b))
+                .setScale(10, roundingMode).toPlainString();
     }
 
-    public String mul(String a, String b, RoundingMode roundingMode) throws Exception {
-        try {
-            validateNumbers();
-            formatNumbers();
-            return formatNumber(new BigDecimal(a).multiply(new BigDecimal(b)), roundingMode);
-        } catch (IllegalNumberFormatException e) {
-            return e.getLocalizedMessage();
-        }
+    public String mul(String a, String b, RoundingMode roundingMode) {
+        return new BigDecimal(a).multiply(new BigDecimal(b))
+                .setScale(10, roundingMode).toPlainString();
     }
 
-    public String divide(String a, String b, RoundingMode roundingMode) throws Exception {
-        try {
-            validateNumbers();
-            formatNumbers();
-            return formatNumber(new BigDecimal(a).divide(new BigDecimal(b)), roundingMode);
-        } catch (IllegalNumberFormatException e) {
-            return e.getLocalizedMessage();
-        }
+    public String divide(String a, String b, RoundingMode roundingMode) {
+        return new BigDecimal(a).divide(new BigDecimal(b), 10, roundingMode)
+                .toPlainString();
     }
 
     private void formatNumbers() throws IllegalNumberFormatException {
-        String regex = "^((\\d{1,3}( \\d{3})*)|(\\d+))(\\.\\d+)?$";
+        String regex = "^-?((\\d{1,3}( \\d{3})*)|(\\d+))(\\.\\d+)?$";
 
         if (a.contains(","))
             a = a.replace(",", ".");
@@ -130,7 +127,7 @@ public class CalculatorModel {
             c = c.replace(",", ".");
 
         if (!c.matches(regex))
-            throw new IllegalNumberFormatException("Wrong format of the second number");
+            throw new IllegalNumberFormatException("Wrong format of the third number");
         else
             c = c.replace(" ", "");
 
@@ -138,7 +135,7 @@ public class CalculatorModel {
             d = d.replace(",", ".");
 
         if (!d.matches(regex))
-            throw new IllegalNumberFormatException("Wrong format of the second number");
+            throw new IllegalNumberFormatException("Wrong format of the fourth number");
         else
             d = d.replace(" ", "");
     }
@@ -152,8 +149,9 @@ public class CalculatorModel {
         return decimalFormat.format(number);
     }
 
-    private void validateNumbers() throws Exception{
-        if (a.contains("e+") || b.contains("e+"))
-            throw new Exception();
+    private void validateNumbers() throws IllegalNumberFormatException{
+        if (a.contains("e+") || b.contains("e+") || c.contains("e+") || d.contains("e+"))
+            throw new IllegalNumberFormatException("Exponential numbers " +
+                    "are forbidden");
     }
 }
